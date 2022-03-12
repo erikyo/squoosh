@@ -1,7 +1,7 @@
-import { instantiateEmscriptenWasm } from './emscripten-utils.js';
+import { instantiateEmscriptenWasm } from './emscripten-utils';
 
 import visdif from '../../codecs/visdif/visdif.js';
-import visdifWasm from 'asset-url:../../codecs/visdif/visdif.wasm';
+import visdifWasm from '~asset-url:../../codecs/visdif/visdif.wasm';
 import type ImageData from './image_data';
 
 interface VisDiff {

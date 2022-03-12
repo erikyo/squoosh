@@ -14,7 +14,7 @@ import { promises as fs } from 'fs';
 import { basename } from 'path';
 
 const defaultOpts = {
-  prefix: 'asset-url',
+  prefix: '~asset-url',
 };
 
 export default function assetPlugin(opts) {

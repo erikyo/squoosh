@@ -12,9 +12,9 @@ import {
   RotateOptions,
   WebPEncodeOptions,
   WP2EncodeOptions,
-} from './codecs.js';
-import WorkerPool from './worker_pool.js';
-import { autoOptimize } from './auto-optimizer.js';
+} from './codecs';
+import WorkerPool from './worker_pool';
+import { autoOptimize } from './auto-optimizer';
 import type ImageData from './image_data';
 
 export { ImagePool, encoders, preprocessors };

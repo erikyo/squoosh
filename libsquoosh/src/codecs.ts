@@ -1,5 +1,5 @@
 import { promises as fsp } from 'fs';
-import { instantiateEmscriptenWasm, pathify } from './emscripten-utils.js';
+import { instantiateEmscriptenWasm, pathify } from './emscripten-utils';
 import { threads } from 'wasm-feature-detect';
 import { cpus } from 'os';
 
@@ -58,56 +58,56 @@ import type { QuantizerModule } from '../../codecs/imagequant/imagequant.js';
 // MozJPEG
 import type { MozJPEGModule as MozJPEGEncodeModule } from '../../codecs/mozjpeg/enc/mozjpeg_enc';
 import mozEnc from '../../codecs/mozjpeg/enc/mozjpeg_node_enc.js';
-import mozEncWasm from 'asset-url:../../codecs/mozjpeg/enc/mozjpeg_node_enc.wasm';
+import mozEncWasm from '~asset-url:../../codecs/mozjpeg/enc/mozjpeg_node_enc.wasm';
 import mozDec from '../../codecs/mozjpeg/dec/mozjpeg_node_dec.js';
-import mozDecWasm from 'asset-url:../../codecs/mozjpeg/dec/mozjpeg_node_dec.wasm';
+import mozDecWasm from '~asset-url:../../codecs/mozjpeg/dec/mozjpeg_node_dec.wasm';
 import type { EncodeOptions as MozJPEGEncodeOptions } from '../../codecs/mozjpeg/enc/mozjpeg_enc';
 
 // WebP
 import type { WebPModule as WebPEncodeModule } from '../../codecs/webp/enc/webp_enc';
 import webpEnc from '../../codecs/webp/enc/webp_node_enc.js';
-import webpEncWasm from 'asset-url:../../codecs/webp/enc/webp_node_enc.wasm';
+import webpEncWasm from '~asset-url:../../codecs/webp/enc/webp_node_enc.wasm';
 import webpDec from '../../codecs/webp/dec/webp_node_dec.js';
-import webpDecWasm from 'asset-url:../../codecs/webp/dec/webp_node_dec.wasm';
+import webpDecWasm from '~asset-url:../../codecs/webp/dec/webp_node_dec.wasm';
 import type { EncodeOptions as WebPEncodeOptions } from '../../codecs/webp/enc/webp_enc.js';
 
 // AVIF
 import type { AVIFModule as AVIFEncodeModule } from '../../codecs/avif/enc/avif_enc';
 import avifEnc from '../../codecs/avif/enc/avif_node_enc.js';
-import avifEncWasm from 'asset-url:../../codecs/avif/enc/avif_node_enc.wasm';
+import avifEncWasm from '~asset-url:../../codecs/avif/enc/avif_node_enc.wasm';
 import avifEncMt from '../../codecs/avif/enc/avif_node_enc_mt.js';
-import avifEncMtWorker from 'chunk-url:../../codecs/avif/enc/avif_node_enc_mt.worker.js';
-import avifEncMtWasm from 'asset-url:../../codecs/avif/enc/avif_node_enc_mt.wasm';
+import avifEncMtWorker from '~chunk-url:../../codecs/avif/enc/avif_node_enc_mt.worker.js';
+import avifEncMtWasm from '~asset-url:../../codecs/avif/enc/avif_node_enc_mt.wasm';
 import avifDec from '../../codecs/avif/dec/avif_node_dec.js';
-import avifDecWasm from 'asset-url:../../codecs/avif/dec/avif_node_dec.wasm';
+import avifDecWasm from '~asset-url:../../codecs/avif/dec/avif_node_dec.wasm';
 import type { EncodeOptions as AvifEncodeOptions } from '../../codecs/avif/enc/avif_enc.js';
 
 // JXL
 import type { JXLModule as JXLEncodeModule } from '../../codecs/jxl/enc/jxl_enc';
 import jxlEnc from '../../codecs/jxl/enc/jxl_node_enc.js';
-import jxlEncWasm from 'asset-url:../../codecs/jxl/enc/jxl_node_enc.wasm';
+import jxlEncWasm from '~asset-url:../../codecs/jxl/enc/jxl_node_enc.wasm';
 import jxlDec from '../../codecs/jxl/dec/jxl_node_dec.js';
-import jxlDecWasm from 'asset-url:../../codecs/jxl/dec/jxl_node_dec.wasm';
+import jxlDecWasm from '~asset-url:../../codecs/jxl/dec/jxl_node_dec.wasm';
 import type { EncodeOptions as JxlEncodeOptions } from '../../codecs/jxl/enc/jxl_enc.js';
 
 // WP2
 import type { WP2Module as WP2EncodeModule } from '../../codecs/wp2/enc/wp2_enc';
 import wp2Enc from '../../codecs/wp2/enc/wp2_node_enc.js';
-import wp2EncWasm from 'asset-url:../../codecs/wp2/enc/wp2_node_enc.wasm';
+import wp2EncWasm from '~asset-url:../../codecs/wp2/enc/wp2_node_enc.wasm';
 import wp2Dec from '../../codecs/wp2/dec/wp2_node_dec.js';
-import wp2DecWasm from 'asset-url:../../codecs/wp2/dec/wp2_node_dec.wasm';
+import wp2DecWasm from '~asset-url:../../codecs/wp2/dec/wp2_node_dec.wasm';
 import type { EncodeOptions as WP2EncodeOptions } from '../../codecs/wp2/enc/wp2_enc.js';
 
 // PNG
 import * as pngEncDec from '../../codecs/png/pkg/squoosh_png.js';
-import pngEncDecWasm from 'asset-url:../../codecs/png/pkg/squoosh_png_bg.wasm';
+import pngEncDecWasm from '~asset-url:../../codecs/png/pkg/squoosh_png_bg.wasm';
 const pngEncDecPromise = pngEncDec.default(
   fsp.readFile(pathify(pngEncDecWasm)),
 );
 
 // OxiPNG
 import * as oxipng from '../../codecs/oxipng/pkg/squoosh_oxipng.js';
-import oxipngWasm from 'asset-url:../../codecs/oxipng/pkg/squoosh_oxipng_bg.wasm';
+import oxipngWasm from '~asset-url:../../codecs/oxipng/pkg/squoosh_oxipng_bg.wasm';
 const oxipngPromise = oxipng.default(fsp.readFile(pathify(oxipngWasm)));
 interface OxiPngEncodeOptions {
   level: number;
@@ -115,25 +115,25 @@ interface OxiPngEncodeOptions {
 
 // Resize
 import * as resize from '../../codecs/resize/pkg/squoosh_resize.js';
-import resizeWasm from 'asset-url:../../codecs/resize/pkg/squoosh_resize_bg.wasm';
+import resizeWasm from '~asset-url:../../codecs/resize/pkg/squoosh_resize_bg.wasm';
 const resizePromise = resize.default(fsp.readFile(pathify(resizeWasm)));
 
 // rotate
-import rotateWasm from 'asset-url:../../codecs/rotate/rotate.wasm';
+import rotateWasm from '~asset-url:../../codecs/rotate/rotate.wasm';
 
 // TODO(ergunsh): Type definitions of some modules do not exist
 // Figure out creating type definitions for them and remove `allowJs` rule
 // We shouldn't need to use Promise<QuantizerModule> below after getting type definitions for imageQuant
 // ImageQuant
 import imageQuant from '../../codecs/imagequant/imagequant_node.js';
-import imageQuantWasm from 'asset-url:../../codecs/imagequant/imagequant_node.wasm';
+import imageQuantWasm from '~asset-url:../../codecs/imagequant/imagequant_node.wasm';
 const imageQuantPromise: Promise<QuantizerModule> = instantiateEmscriptenWasm(
   imageQuant,
   imageQuantWasm,
 );
 
 // Our decoders currently rely on a `ImageData` global.
-import ImageData from './image_data.js';
+import ImageData from './image_data';
 globalThis.ImageData = ImageData;
 
 function resizeNameToIndex(name: string) {
