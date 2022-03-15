@@ -493,7 +493,7 @@ export const codecs = {
   },
 } as const;
 
-export {
+export type {
   MozJPEGEncodeOptions,
   WebPEncodeOptions,
   AvifEncodeOptions,

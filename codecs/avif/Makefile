@@ -1,10 +1,10 @@
 # libavif and libaom versions are from
 # https://docs.google.com/document/d/1wEEA5rRU7wT54k41u3qyZIZHDCJArIMzLuzsrLAwaK8/edit
-CODEC_URL = https://github.com/AOMediaCodec/libavif/archive/1c39e772c2c0d687691dd4b589a12c323f5f767d.tar.gz
-CODEC_PACKAGE = node_modules/libavif.tar.gz
+CODEC_URL = https://github.com/AOMediaCodec/libavif/archive/refs/tags/v0.9.0.tar.gz
+CODEC_PACKAGE = node_modules/libavif-0.9.0.tar.gz
 
-LIBAOM_URL = https://aomedia.googlesource.com/aom/+archive/v3.1.0.tar.gz
-LIBAOM_PACKAGE = node_modules/libaom.tar.gz
+LIBAOM_URL = https://aomedia.googlesource.com/aom/+archive/v3.3.0.tar.gz
+LIBAOM_PACKAGE = node_modules/libaom-v3.3.0.tar.gz
 
 export CODEC_DIR = node_modules/libavif
 export BUILD_DIR = node_modules/build

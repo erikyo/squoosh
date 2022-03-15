@@ -1,5 +1,5 @@
-CODEC_URL = https://github.com/webmproject/libwebp/archive/d2e245ea9e959a5a79e1db0ed2085206947e98f2.tar.gz
-CODEC_DIR = node_modules/libwebp
+CODEC_URL = https://github.com/webmproject/libwebp/archive/refs/tags/v1.2.2.tar.gz
+CODEC_DIR = node_modules/libwebp-1.2.2.tar.gz
 CODEC_BUILD_ROOT := $(CODEC_DIR)/build
 CODEC_BASELINE_BUILD_DIR := $(CODEC_BUILD_ROOT)/baseline
 CODEC_SIMD_BUILD_DIR := $(CODEC_BUILD_ROOT)/simd

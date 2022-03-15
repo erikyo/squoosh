@@ -5,7 +5,8 @@ import type { ProcessorWorkerApi } from '../../../features-worker';
 import { abortable } from '../util';
 
 /** How long the worker should be idle before terminating. */
-const workerTimeout = 10_000;
+const _workerTimeout : number = 10000;
+const _workerTimeoutId : number | undefined = undefined;
 
 interface WorkerBridge extends BridgeMethods {}
 
@@ -17,6 +18,7 @@ class WorkerBridge {
   protected _workerApi?: ProcessorWorkerApi;
   /** ID from setTimeout */
   protected _workerTimeout?: number;
+  protected _workerTimeoutId?: number;
 
   protected _terminateWorker() {
     if (!this._worker) return;
@@ -43,7 +45,7 @@ for (const methodName of methodNames) {
       .then(async () => {
         if (signal.aborted) throw new DOMException('AbortError', 'AbortError');
 
-        clearTimeout(this._workerTimeout);
+        clearTimeout(this._workerTimeoutId);
         if (!this._worker) this._startWorker();
 
         const onAbort = () => this._terminateWorker();
@@ -58,9 +60,9 @@ for (const methodName of methodNames) {
           signal.removeEventListener('abort', onAbort);
 
           // Start a timer to clear up the worker.
-          this._workerTimeout = setTimeout(() => {
+          this._workerTimeoutId = setTimeout(() => {
             this._terminateWorker();
-          }, workerTimeout);
+          }, _workerTimeout);
         });
       });
 

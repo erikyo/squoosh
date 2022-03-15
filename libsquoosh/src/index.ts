@@ -1,4 +1,4 @@
-import { isMainThread } from 'worker_threads';
+import * as worker_threads from 'worker_threads';
 
 import {
   AvifEncodeOptions,
@@ -303,6 +303,6 @@ class ImagePool {
   }
 }
 
-if (!isMainThread) {
+if (!worker_threads.isMainThread) {
   WorkerPool.useThisThreadAsWorker(handleJob);
 }

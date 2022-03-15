@@ -1,0 +1,147 @@
+$white: white;
+$gray-lighter: #f3f3f3;
+$gray-darker: #666;
+$black: #000;
+$green: green;
+
+
+body, html {
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+
+.wrap {
+  height: auto;
+  width: 100%;
+  position: relative;
+  top:0;
+}
+
+.wrap {
+  display: flex;
+  justify-content: center;
+
+  #squoosh-browser {
+    width: 360px;
+    background: $white;
+    border: 1px solid $gray-lighter;
+    box-shadow: 0 10px 30px -30px $black;
+    text-align: center;
+    border-radius: 20px;
+    margin: 50px;
+    align-self: center;
+    z-index: 1;
+    padding: 20px;
+  }
+
+  #original {
+    background: $gray-lighter;
+  }
+
+  #encoded {
+    clip-path: polygon(
+            50% 0,
+            100% 0,
+            100% 100%,
+            50% 100%);
+    background: darken($gray-lighter, 4%);
+    right:0;
+  }
+}
+
+#encoded,
+#original {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    align-self: center;
+  }
+}
+
+.ruler {
+  height: 100vh;
+  border: 1px solid $gray-darker;
+  position: absolute;
+}
+
+// input button
+.file-input-wrap {
+  .file-input {
+
+      display: inline-block;
+      padding: 6px 12px;
+      margin-bottom: 0;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.4;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      user-select: none;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      position: absolute;
+
+      width: 0.1px;
+      height: 0.1px;
+
+      opacity: 0;
+      overflow: hidden;
+      z-index: -1;
+
+
+    &__label {
+      position: relative;
+
+      display: block;
+      width: 100%;
+
+      margin: 10px 0;
+      padding: 0;
+
+      background: $white;
+      border: 1px solid $gray-lighter;
+      color: $gray-darker;
+
+      line-height: 45px;
+      text-align: center;
+      text-transform: none;
+
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    &:valid ~ .file-input__label {
+      border-color: $green;
+      background: $white;
+      color: $white;
+      border-radius: 5px;
+
+      &:before {
+        content: '✓ Success';
+
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        margin: auto;
+
+        color: $green;
+        line-height: 45px;
+      }
+    }
+  }
+}

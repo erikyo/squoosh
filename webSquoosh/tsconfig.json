@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "target":"ESNext",
+    "module":"ESNext",
+    "moduleResolution": "node",
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "declaration": true,
+    "inlineSourceMap": true
+  },
+  "include": [
+    "../libsquoosh/src/**/*",
+    "../codecs/**/*",
+    "src/**/*"
+  ]
+}
