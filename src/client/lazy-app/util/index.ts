@@ -70,7 +70,7 @@ export function canDecodeImageType(type: string): Promise<boolean> {
       picture.append(source, img);
 
       // Wait a single microtick just for the `img.currentSrc` to get populated.
-      await 0;
+      // await 0;
       // At this point `img.currentSrc` will contain "data:,x" if format is supported and ""
       // otherwise.
       return !!img.currentSrc;
@@ -155,6 +155,22 @@ export async function builtinDecode(
     signal,
     'createImageBitmap' in self ? createImageBitmap(blob) : blobToImg(blob),
   );
+  return drawableToImageData(drawable);
+}
+
+export async function builtinDecodeWeb(
+  blob: Blob,
+  mimeType: string,
+): Promise<ImageData> {
+  // If WebCodecs are supported, use that.
+  if (await WebCodecs.isTypeSupported(mimeType)) {
+    try {
+      return await WebCodecs.decode(blob, mimeType);
+    } catch (e) {}
+  }
+
+  // Prefer createImageBitmap as it's the off-thread option for Firefox.
+  const drawable = 'createImageBitmap' in self ? await createImageBitmap(blob) : await blobToImg(blob);
   return drawableToImageData(drawable);
 }
 

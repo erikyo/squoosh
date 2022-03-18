@@ -6,7 +6,7 @@ import { abortable } from '../util';
 
 /** How long the worker should be idle before terminating. */
 const _workerTimeout : number = 10000;
-const _workerTimeoutId : number | undefined = undefined;
+const _workerTimeoutId : number | undefined | HTMLTimeElement = undefined;
 
 interface WorkerBridge extends BridgeMethods {}
 
@@ -60,7 +60,7 @@ for (const methodName of methodNames) {
           signal.removeEventListener('abort', onAbort);
 
           // Start a timer to clear up the worker.
-          this._workerTimeoutId = setTimeout(() => {
+          this._workerTimeoutId = window.setTimeout(() => {
             this._terminateWorker();
           }, _workerTimeout);
         });

@@ -14,7 +14,7 @@ function subtractSets<T extends any>(set1: Set<T>, set2: Set<T>): Set<T> {
 // Initial app stuff
 import * as initialApp from 'entry-data:client/initial-app';
 import swUrl from 'service-worker:sw';
-import * as compress from 'entry-data:client/lazy-app/Compress';
+import * as compress from 'entry-data:client/lazy-app/Compress/app';
 import * as swBridge from 'entry-data:client/lazy-app/sw-bridge';
 import * as blobAnim from 'entry-data:shared/prerendered-app/Intro/blob-anim';
 

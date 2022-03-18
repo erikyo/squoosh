@@ -1,10 +1,13 @@
 const webpack = require('webpack');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const devMode = process.env.NODE_ENV !== "production";
 
 module.exports = {
   devtool: 'inline-source-map',
-  entry: './src/index.tsx',
+  entry: './src/index.ts',
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, '../docs')
@@ -12,7 +15,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.(ts|js)x?$/,
         exclude: /node_modules/,
         use: [
           {
@@ -20,67 +23,46 @@ module.exports = {
           },
           {
             loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+            },
           },
         ]
       },
       {
         test: /\.s[ac]ss$/i,
         use: [
-          // Creates `style` nodes from JS strings
-          "style-loader",
-          // Translates CSS into CommonJS
+          MiniCssExtractPlugin.loader,
           "css-loader",
-          // Compiles Sass to CSS
           "sass-loader",
         ],
       },
       {
-        test: /\.worker\.js/,
-        use: {
-          loader: "worker-loader",
-          options: { fallback: true }
-        }
-      },
-      {
-        test: /\.wasm$/,
-        type:
-          "javascript/auto" /** this disables webpacks default handling of wasm */,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              name: "wasm/[name].[hash].[ext]",
-              publicPath: "../docs/"
-            }
-          }
-        ]
+        test: /\.wasm/,
+        type: 'asset/resource'
       }
     ]
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
-    fallback: {
-      fs: false,
-      path: require.resolve( 'path-browserify' ),
-      os: require.resolve( 'os-browserify' ),
-    },
+    extensions: ['.ts', '.tsx', '.js', '.json'],
+    plugins: [
+      new TsconfigPathsPlugin({
+        logLevel: 'info'
+      })
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
       title: 'Squoosh Browser Demo'
     }),
-    new webpack.NormalModuleReplacementPlugin(
+    new webpack.ContextReplacementPlugin(
       /(.*)~(asset|chunk)-url:(\.*)/,
-      function (resource) {
-        resource.request = resource.request.replace(
-          /~(?:asset|chunk)-url:/,
-          ``
-        );
-      }
+      path.resolve(__dirname, '../')
     ),
-  ],
-  experiments: {
-    topLevelAwait: true,
-  }
+    new MiniCssExtractPlugin({
+      filename: devMode ? "[name].css" : "[name].[contenthash].css",
+      chunkFilename: devMode ? "[id].css" : "[id].[contenthash].css",
+    }),
+  ]
 };

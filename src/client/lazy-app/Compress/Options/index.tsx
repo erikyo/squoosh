@@ -4,19 +4,19 @@ import * as style from './style.css';
 import 'add-css:./style.css';
 import { cleanSet, cleanMerge } from '../../util/clean-modify';
 
-import type { SourceImage, OutputType } from '..';
+import type { SourceImage, OutputType } from '../app';
 import {
   EncoderOptions,
   EncoderState,
   ProcessorState,
   ProcessorOptions,
   encoderMap,
-} from '../../feature-meta';
+} from '../../feature-meta/app';
 import Expander from './Expander';
 import Toggle from './Toggle';
 import Select from './Select';
 import { Options as QuantOptionsComponent } from 'features/processors/quantize/client';
-import { Options as ResizeOptionsComponent } from 'features/processors/resize/client';
+import { Options as ResizeOptionsComponent } from '../../../../features/processors/resize/client';
 import { CLIIcon, SwapIcon } from 'client/lazy-app/icons';
 
 interface Props {

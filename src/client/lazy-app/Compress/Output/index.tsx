@@ -16,9 +16,9 @@ import {
   RotateIcon,
 } from '../../icons';
 import { twoUpHandle } from './custom-els/TwoUp/styles.css';
-import type { PreprocessorState } from '../../feature-meta';
+import type { PreprocessorState } from '../../feature-meta/app';
 import { cleanSet } from '../../util/clean-modify';
-import type { SourceImage } from '../../Compress';
+import type { SourceImage } from '../app';
 import { linkRef } from 'shared/prerendered-app/util';
 import { drawDataToCanvas } from 'client/lazy-app/util/canvas';
 interface Props {

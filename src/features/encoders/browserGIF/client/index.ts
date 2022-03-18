@@ -3,6 +3,12 @@ import WorkerBridge from 'client/lazy-app/worker-bridge';
 import { EncodeOptions, mimeType } from '../shared/meta';
 
 export const featureTest = () => canvasEncodeTest(mimeType);
+
+export const gifWebEncode = (
+  imageData: ImageData,
+  options: EncodeOptions,
+) => canvasEncode(imageData, mimeType);
+
 export const encode = (
   signal: AbortSignal,
   workerBridge: WorkerBridge,

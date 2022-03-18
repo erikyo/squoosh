@@ -41,7 +41,7 @@ Encoders must have the following:
 - `EncodeOptions` - An interface for the codec's options.
 - `defaultOptions` - An object of type `EncodeOptions`.
 
-`client/index.ts` which exposes the following:
+`client/app.ts` which exposes the following:
 
 - `encode` - A method which takes args:
   - `AbortSignal`

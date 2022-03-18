@@ -21,7 +21,7 @@ import {
   defaultProcessorState,
   EncoderType,
   EncoderOptions,
-} from '../feature-meta';
+} from '../feature-meta/app';
 import Output from './Output';
 import Options from './Options';
 import ResultCache from './result-cache';
@@ -29,7 +29,7 @@ import { cleanMerge, cleanSet } from '../util/clean-modify';
 import './custom-els/MultiPanel';
 import Results from './Results';
 import WorkerBridge from '../worker-bridge';
-import { resize } from 'features/processors/resize/client';
+import { resize } from '../../../features/processors/resize/client';
 import type SnackBarElement from 'shared/custom-els/snack-bar';
 import { generateCliInvocation } from '../util/cli';
 import { drawableToImageData } from '../util/canvas';
@@ -133,7 +133,6 @@ async function preprocessImage(
 
   if (preprocessorState.rotate.rotate !== 0) {
     processedData = await workerBridge.rotate(
-      signal,
       processedData,
       preprocessorState.rotate,
     );
@@ -156,7 +155,6 @@ async function processImage(
   }
   if (processorState.quantize.enabled) {
     result = await workerBridge.quantize(
-      signal,
       result,
       processorState.quantize,
     );
@@ -500,7 +498,7 @@ export default class Compress extends Component<Props, State> {
     if (immediate) {
       this.updateImage();
     } else {
-      this.updateImageTimeout = setTimeout(() => this.updateImage(), delay);
+      this.updateImageTimeout = window.setTimeout(() => this.updateImage(), delay);
     }
   }
 

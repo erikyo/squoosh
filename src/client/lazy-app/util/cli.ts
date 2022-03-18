@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-import { EncoderState, ProcessorState } from '../feature-meta';
+import { EncoderState, ProcessorState } from '../feature-meta/app';
 
 // Maps our encoder.type values to CLI parameter names
 const typeMap = new Map<string, string>([

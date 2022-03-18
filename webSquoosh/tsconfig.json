@@ -1,17 +1,34 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "../generic-tsconfig.json",
   "compilerOptions": {
     "target":"ESNext",
     "module":"ESNext",
     "moduleResolution": "node",
+    "esModuleInterop": true,
+    "listFiles": true,
+    "sourceMap": true,
     "removeComments": true,
-    "preserveConstEnums": true,
-    "declaration": true,
-    "inlineSourceMap": true
+    "extendedDiagnostics": true,
+    "noErrorTruncation": true,
+
+  },
+  "paths": {
+    "client/*": ["../src/client/*"],
+    "features/*": ["../src/features/*"],
+    "codecs/*": ["../codecs/*"],
   },
   "include": [
-    "../libsquoosh/src/**/*",
-    "../codecs/**/*",
+    "../src/features/**/client/**/*",
+    "../src/features/**/shared/**/*",
+    "../src/features/client-utils/**/*",
+    "../src/client/lazy-app/**/*",
     "src/**/*"
+  ],
+  "exclude": [
+    "../src/client/initial-app/**/*",
+    "../src/client/lazy-app/Compress/custom-els/**/*",
+    "../src/client/lazy-app/Compress/Options/**/*",
+    "../src/client/lazy-app/Compress/Output/**/*",
+    "../src/client/lazy-app/Compress/Results/**/*"
   ]
 }

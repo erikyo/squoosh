@@ -1,10 +1,50 @@
-import { PreprocessorState, ProcessorState, EncoderState } from "../../src/client/lazy-app/feature-meta/web";
+import {default as Compress} from "client/lazy-app/Compress/web";
+import { PreprocessorState, ProcessorState, EncoderState } from "client/lazy-app/feature-meta/web";
 
-import {Compress} from "../../src/client/lazy-app/Compress/web";
+import "./style.scss";
 
-import "style.scss";
+const options: opt = {
+  encoderState: {
+    type: "avif",
+    options: {
+      cqLevel: 30,
+      cqAlphaLevel: -1,
+      denoiseLevel: 0,
+      tileColsLog2: 0,
+      tileRowsLog2: 0,
+      speed: 7,
+      subsample: 2,
+      chromaDeltaQ: false,
+      sharpness: 0,
+      tune: 1,
+    }
+  },
+  preprocessorState: {
+    rotate: {
+      rotate: 0
+    }
+  },
+  processorState: {
+    quantize: { enabled: false, ...{
+        zx: 0,
+        maxNumColors: 256,
+        dither: 1.0,
+      } },
+    resize: { enabled: false, ...{
+        // Width and height will always default to the image size.
+        // This is set elsewhere.
+        width: 1,
+        height: 1,
+        // This will be set to 'vector' if the input is SVG.
+        method: 'lanczos3',
+        fitMethod: 'stretch',
+        premultiply: true,
+        linearRGB: true,
+      } },
+  }
+}
 
-interface Setting {
+interface opt {
   preprocessorState: PreprocessorState;
   processorState: ProcessorState;
   encoderState: EncoderState;
@@ -15,32 +55,25 @@ interface ImageData {
   name: string;
 }
 
-
-
-
 // Create Squoosh Browser object into window
 const squooshBrowser = {
 
-  encodeLog(filesize : File, data : Setting | undefined = undefined) {
+  encodeLog(filesize : File, data : opt | undefined = undefined) {
     console.log('Squoosh Browser');
     console.log(new Date() + `Filename: ${filesize.size}  (size ${filesize.size})`);
     if (data) console.log('data', data);
   },
 
   // Encode to Avif
-  encoder: async function (data: { file: File, args: Setting }) {
+  async encoder(image: File, args: opt = options) {
 
-    this.encodeLog(data.file, data.args);
+    this.encodeLog(image, args);
 
-    const img = await new Compress( {'file': data.file, onBack: () => true} );
+    const compress = new Compress(image, args);
 
-    img.queueUpdateImage({immediate: true});
+    const compressFile : File = await compress.process();
 
-    // compress.process().then(() => console.log(data.file));
-
-    // this.encodeLog(compressFile);
-
-    return img;
+    return compressFile;
   },
 
 
@@ -51,7 +84,6 @@ const squooshBrowser = {
     downloadLink.download = fileName;
   },
 
-
   setImage(src : string, target : string) {
     const img = new Image()
     img.src = src
@@ -60,7 +92,7 @@ const squooshBrowser = {
   },
 
 
-  async changeCallback(uploadedFile: Event) {
+  changeCallback: async function (uploadedFile: Event) {
 
     const images = uploadedFile.target as HTMLInputElement;
 
@@ -94,10 +126,10 @@ const squooshBrowser = {
   },
 
 
-  async readImage( image : File, args : Setting = options) :  Promise<ImageData> {
-    const respSquoosh = await squooshBrowser.encoder({file: image, args: args} );
+  async readImage( image : File ) {
+    const respSquoosh = await squooshBrowser.encoder(image);
     const reader = new FileReader()
-    // await reader.readAsDataURL(respSquoosh)
+    await reader.readAsDataURL(respSquoosh)
 
     return new Promise<ImageData>(function (resolve) {
       reader.onload = () => {

@@ -10,11 +10,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  EncodeOptions,
-  MozJpegColorSpace,
-} from 'codecs/mozjpeg/enc/mozjpeg_enc';
-export { EncodeOptions, MozJpegColorSpace };
+import type {EncodeOptions } from 'codecs/mozjpeg/enc/mozjpeg_enc';
+export { EncodeOptions  };
 
 export const label = 'MozJPEG';
 export const mimeType = 'image/jpeg';
@@ -26,7 +23,6 @@ export const defaultOptions: EncodeOptions = {
   progressive: true,
   optimize_coding: true,
   smoothing: 0,
-  color_space: MozJpegColorSpace.YCbCr,
   quant_table: 3,
   trellis_multipass: false,
   trellis_opt_zero: false,

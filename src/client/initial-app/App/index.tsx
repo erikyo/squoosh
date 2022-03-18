@@ -14,7 +14,7 @@ import 'shared/custom-els/loading-spinner';
 
 const ROUTE_EDITOR = '/editor';
 
-const compressPromise = import('client/lazy-app/Compress');
+const compressPromise = import('../../lazy-app/Compress/app');
 const swBridgePromise = import('client/lazy-app/sw-bridge');
 
 function back() {
@@ -27,7 +27,7 @@ interface State {
   awaitingShareTarget: boolean;
   file?: File;
   isEditorOpen: Boolean;
-  Compress?: typeof import('client/lazy-app/Compress').default;
+  Compress?: typeof import('../../lazy-app/Compress/app').default;
 }
 
 export default class App extends Component<Props, State> {
