@@ -1,4 +1,4 @@
-CODEC_URL := https://github.com/mozilla/mozjpeg/archive/v3.3.1.tar.gz
+CODEC_URL := https://github.com/mozilla/mozjpeg/archive/refs/tags/v4.0.3.tar.gz
 CODEC_DIR := node_modules/mozjpeg
 CODEC_OUT_RELATIVE := .libs/libjpeg.a rdswitch.o
 CODEC_OUT := $(addprefix $(CODEC_DIR)/, $(CODEC_OUT_RELATIVE))
@@ -48,7 +48,7 @@ $(CODEC_DIR)/Makefile: $(CODEC_DIR)/configure
 		# binary as part of the version string, making binaries different each time.
 
 $(CODEC_DIR)/configure: $(CODEC_DIR)/configure.ac
-	cd $(CODEC_DIR) && autoreconf -iv
+	cd $(CODEC_DIR) && autoreconf -fiv
 
 $(CODEC_DIR)/configure.ac: $(CODEC_DIR)
 

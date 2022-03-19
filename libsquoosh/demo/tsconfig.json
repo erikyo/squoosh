@@ -4,9 +4,13 @@
     "target":"ESNext",
     "module":"ESNext",
     "moduleResolution": "node",
+    "lib": ["ESNext", "DOM"],
     "removeComments": true,
     "preserveConstEnums": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "declaration": true,
+    // Ensure that Babel can safely transpile files in the TypeScript project
+    "isolatedModules": true
   },
   "include": [
     "../src/**/*",

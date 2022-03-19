@@ -1,4 +1,6 @@
-import {EncodeOptions, defaultOptions, AVIFTune} from '../shared/meta';
+import "./index"
+import {EncodeOptions, defaultOptions} from '../shared/meta';
+import {AVIFTune} from "../../../../../codecs/avif/enc/avif_enc";
 import type WorkerBridge from 'client/lazy-app/worker-bridge';
 import { h, Component } from 'preact';
 import { preventDefault, shallowEqual } from 'client/lazy-app/util';

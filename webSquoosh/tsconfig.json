@@ -4,13 +4,13 @@
     "target":"ESNext",
     "module":"ESNext",
     "moduleResolution": "node",
+    "preserveConstEnums": true,
     "esModuleInterop": true,
     "listFiles": true,
     "sourceMap": true,
     "removeComments": true,
     "extendedDiagnostics": true,
-    "noErrorTruncation": true,
-
+    "noErrorTruncation": true
   },
   "paths": {
     "client/*": ["../src/client/*"],

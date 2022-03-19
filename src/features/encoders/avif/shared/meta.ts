@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { EncodeOptions } from '../../../../../codecs/avif/enc/avif_enc';
+import type {EncodeOptions} from '../../../../../codecs/avif/enc/avif_enc';
 
 export { EncodeOptions };
 
@@ -27,5 +27,5 @@ export const defaultOptions: EncodeOptions = {
   subsample: 1,
   chromaDeltaQ: false,
   sharpness: 0,
-  tune: 1
+  tune: 0
 };

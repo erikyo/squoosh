@@ -10,8 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type {EncodeOptions} from 'codecs/wp2/enc/wp2_enc.js';
-import {Csp, UVMode} from "codecs/wp2/enc/wp2_enc.js";
+import type { EncodeOptions } from '../../../../../codecs/wp2/enc/wp2_enc';
 
 export { EncodeOptions };
 
@@ -23,7 +22,7 @@ export const defaultOptions: EncodeOptions = {
   alpha_quality: 75,
   effort: 5,
   pass: 1,
-  uv_mode: 3,
+  uv_mode: 0,
   csp_type: 0,
   sns: 50,
   error_diffusion: 0,

@@ -4,7 +4,6 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: './src/index.tsx',
-  target: ['node'],
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, '../docs')
@@ -35,13 +34,34 @@ module.exports = {
         ],
       },
       {
-        test: /\.wasm/,
-        type: 'asset/resource'
+        test: /\.worker\.js/,
+        use: {
+          loader: "worker-loader",
+          options: { fallback: true }
+        }
+      },
+      {
+        test: /\.wasm$/,
+        type:
+          "javascript/auto" /** this disables webpacks default handling of wasm */,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: "wasm/[name].[hash].[ext]",
+              publicPath: "../docs/"
+            }
+          }
+        ]
       }
     ]
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    fallback: {
+      path: require.resolve( 'path-browserify' ),
+      os: require.resolve( 'os-browserify' ),
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({

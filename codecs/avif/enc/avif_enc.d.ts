@@ -1,4 +1,4 @@
-export const enum AVIFTune {
+export enum AVIFTune {
   auto,
   psnr,
   ssim,

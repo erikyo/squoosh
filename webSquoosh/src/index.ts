@@ -1,53 +1,48 @@
 import {default as Compress} from "client/lazy-app/Compress/web";
-import { PreprocessorState, ProcessorState, EncoderState } from "client/lazy-app/feature-meta/web";
+import {PreprocessorState, ProcessorState, EncoderState, encoderMap, EncoderType, defaultProcessorState, defaultPreprocessorState, EncoderOptions} from "client/lazy-app/feature-meta/web";
 
 import "./style.scss";
 
-const options: opt = {
-  encoderState: {
-    type: "avif",
-    options: {
-      cqLevel: 30,
-      cqAlphaLevel: -1,
-      denoiseLevel: 0,
-      tileColsLog2: 0,
-      tileRowsLog2: 0,
-      speed: 7,
-      subsample: 2,
-      chromaDeltaQ: false,
-      sharpness: 0,
-      tune: 1,
-    }
+// Controls
+const selectChangeHandle = ({target}: {target: EventTarget | null | any }) => {
+  const selected : EncoderType = <"browserPNG" | "browserJPEG" | "wp2" | "mozJPEG" | "webP" | "browserGIF" | "oxiPNG" | "avif" | "jxl"> target?.value;
+
+  document.getElementById("controlWrapOptions")?.childNodes[0].replaceWith(Object.entries(encoderMap[selected].meta.defaultOptions).map(elem => elem[0] + ": " + elem[1]).join(",\n"))
+
+  options.encoderState.type = selected;
+  options.encoderState.options = encoderMap[selected].meta.defaultOptions
+};
+function buildOptions(type:EncoderType) {
+  var select = document.createElement("select");
+  select.className = "imageFormats";
+
+  Object.keys(encoderMap).forEach((type: string, i) => {
+    var el = document.createElement("option");
+    el.textContent = el.value = type;
+    select.appendChild(el);
+  })
+  select.onchange = selectChangeHandle;
+  document.getElementById("controlWrap")?.append(select);
+  document.getElementById("controlWrapOptions")?.append(
+    Object.entries(encoderMap[type].meta.defaultOptions).map(elem => elem[0] + ": " + elem[1]).join(",\n")
+  )
+}
+buildOptions("avif");
+
+
+const options : opt = {
+  "encoderState": {
+    type: 'avif',
+    options: encoderMap.avif.meta.defaultOptions,
   },
-  preprocessorState: {
-    rotate: {
-      rotate: 0
-    }
-  },
-  processorState: {
-    quantize: { enabled: false, ...{
-        zx: 0,
-        maxNumColors: 256,
-        dither: 1.0,
-      } },
-    resize: { enabled: false, ...{
-        // Width and height will always default to the image size.
-        // This is set elsewhere.
-        width: 1,
-        height: 1,
-        // This will be set to 'vector' if the input is SVG.
-        method: 'lanczos3',
-        fitMethod: 'stretch',
-        premultiply: true,
-        linearRGB: true,
-      } },
-  }
+  "processorState": defaultProcessorState,
+  "preprocessorState": defaultPreprocessorState
 }
 
 interface opt {
+  encoderState: EncoderState;
   preprocessorState: PreprocessorState;
   processorState: ProcessorState;
-  encoderState: EncoderState;
 }
 
 interface ImageData {
@@ -60,7 +55,7 @@ const squooshBrowser = {
 
   encodeLog(filesize : File, data : opt | undefined = undefined) {
     console.log('Squoosh Browser');
-    console.log(new Date() + `Filename: ${filesize.size}  (size ${filesize.size})`);
+    console.log(new Date() + `Filename: ${filesize.name}  (size ${filesize.size})`);
     if (data) console.log('data', data);
   },
 
@@ -102,12 +97,11 @@ const squooshBrowser = {
     }
 
      [...images.files].forEach((image) => {
+
        squooshBrowser.readImage(image)
          .then((res) => {
-
            // load the original image
            squooshBrowser.loadOriginal(image);
-
            // process and show the encoded image
            if (typeof res.imageSrc == "string") {
              squooshBrowser.setImage(res.imageSrc, "encoded")
@@ -135,10 +129,11 @@ const squooshBrowser = {
       reader.onload = () => {
         resolve({
           imageSrc: reader.result,
-          name: ''
+          name: ImageData.name
         })
       }
     });
+
   }
 };
 

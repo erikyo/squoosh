@@ -16,7 +16,7 @@ import Expander from './Expander';
 import Toggle from './Toggle';
 import Select from './Select';
 import { Options as QuantOptionsComponent } from 'features/processors/quantize/client';
-import { Options as ResizeOptionsComponent } from '../../../../features/processors/resize/client';
+import { Options as ResizeOptionsComponent } from '../../../../features/processors/resize/client/ui';
 import { CLIIcon, SwapIcon } from 'client/lazy-app/icons';
 
 interface Props {

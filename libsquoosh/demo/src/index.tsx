@@ -1,9 +1,9 @@
-
 import { ImagePool } from '../../src';
-import os from 'os';
-const imagePool = new ImagePool(os.cpus().length);
 
-import fs from 'fs/promises';
+import {cpus} from 'os';
+const imagePool = new ImagePool(cpus.length);
+
+import * as fs from 'fs/promises';
 const file = await fs.readFile('./test.jpg');
 const image = imagePool.ingestImage(file);
 
@@ -27,7 +27,7 @@ console.log(result);
 const newImagePath = '/encoded.'; //extension is added automatically
 
 for (const encodedImage of Object.values(image.encodedWith)) {
-  fs.writeFile(newImagePath + "-" + encodedImage.extension, encodedImage.binary);
+  await fs.writeFile(newImagePath + "-" + encodedImage.extension, encodedImage.binary);
 }
 
 await imagePool.close();

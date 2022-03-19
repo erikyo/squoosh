@@ -10,23 +10,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { h, render } from 'preact';
+import "preact/debug";
+import { render, h } from 'preact';
 import App from './App';
 
 const root = document.getElementById('app') as HTMLElement;
 
 async function main() {
-  if (!__PRODUCTION__) await import('preact/debug');
   render(<App />, root);
 }
 
 main();
 
+function isStandalone() {
+  return (window.matchMedia('(display-mode: standalone)').matches);
+}
+
 // Analytics
 {
   // Determine the current display mode.
   const displayMode =
-    navigator.standalone ||
+    window.navigator.standalone ||
     window.matchMedia('(display-mode: standalone)').matches
       ? 'standalone'
       : 'browser';

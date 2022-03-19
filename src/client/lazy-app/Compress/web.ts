@@ -18,11 +18,11 @@ import {
   EncoderOptions,
 } from '../feature-meta/web';
 
-// import ResultCache from './result-cache';
+import ResultCache from './result-cache';
 
-// import { cleanMerge, cleanSet } from '../util/clean-modify';
+import { cleanMerge, cleanSet } from '../util/clean-modify';
 
-// import workerBridge from "../worker-bridge";
+import workerBridge from "../worker-bridge";
 
 
 import { drawableToImageData } from '../util/canvas';
@@ -57,6 +57,45 @@ interface Setting {
   preprocessorState: PreprocessorState;
   processorState: ProcessorState;
   encoderState: EncoderState;
+}
+
+interface SideSettings {
+  processorState: ProcessorState;
+  encoderState?: EncoderState;
+}
+
+interface Side {
+  processed?: ImageData;
+  file?: File;
+  downloadUrl?: string;
+  data?: ImageData;
+  latestSettings: SideSettings;
+  encodedSettings?: SideSettings;
+  loading: boolean;
+}
+
+interface Props {
+  file: File;
+  onBack: () => void;
+}
+
+interface State {
+  source?: SourceImage;
+  sides: [Side, Side];
+  /** Source image load */
+  loading: boolean;
+  preprocessorState: PreprocessorState;
+  encodedPreprocessorState?: PreprocessorState;
+}
+
+interface MainJob {
+  file: File;
+  preprocessorState: PreprocessorState;
+}
+
+interface SideJob {
+  processorState: ProcessorState;
+  encoderState?: EncoderState;
 }
 
 async function decodeImage(
@@ -164,6 +203,26 @@ async function compressImage(
     sourceFilename.replace(/.[^.]*$/, `.${encoder.meta.extension}`),
     { type },
   );
+}
+
+function stateForNewSourceData(state: State): State {
+  let newState = { ...state };
+
+  for (const i of [0, 1]) {
+    // Ditch previous encodings
+    const downloadUrl = state.sides[i].downloadUrl;
+    if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+
+    newState = cleanMerge(state, `sides.${i}`, {
+      preprocessed: undefined,
+      file: undefined,
+      downloadUrl: undefined,
+      data: undefined,
+      encodedSettings: undefined,
+    });
+  }
+
+  return newState;
 }
 
 async function processSvg(

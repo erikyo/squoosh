@@ -1,3 +1,4 @@
+import "./web"
 import { h, Component } from 'preact';
 
 import * as style from './style.css';

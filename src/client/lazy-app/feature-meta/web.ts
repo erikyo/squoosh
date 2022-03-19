@@ -101,6 +101,7 @@ export const defaultProcessorState: ProcessorState = {
 }
 
 import * as rotatePreprocessorMeta from 'features/preprocessors/rotate/shared/meta';
+
 export interface PreprocessorState {
   rotate: rotatePreprocessorMeta.Options,
 }
