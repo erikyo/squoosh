@@ -1,7 +1,8 @@
 import {default as Compress} from "client/lazy-app/Compress/web";
-import {PreprocessorState, ProcessorState, EncoderState, encoderMap, EncoderType, defaultProcessorState, defaultPreprocessorState, EncoderOptions} from "client/lazy-app/feature-meta/web";
+import {defaultPreprocessorState, defaultProcessorState, encoderMap, EncoderState, EncoderType, PreprocessorState, ProcessorState} from "client/lazy-app/feature-meta/web";
 
 import "./style.scss";
+import {compress} from "client/lazy-app/Compress/style.css";
 
 // Controls
 const selectChangeHandle = ({target}: {target: EventTarget | null | any }) => {
@@ -51,24 +52,23 @@ interface ImageData {
 }
 
 // Create Squoosh Browser object into window
-const squooshBrowser = {
+// later will be rearranged, cleaned up, commented etc... now I am in the creative phase :)
+export const api = {
 
   encodeLog(filesize : File, data : opt | undefined = undefined) {
     console.log('Squoosh Browser');
     console.log(new Date() + `Filename: ${filesize.name}  (size ${filesize.size})`);
-    if (data) console.log('data', data);
+    // if (data) console.log('data', data);
   },
 
   // Encode to Avif
-  async encoder(image: File, args: opt = options) {
+  async encoder(image: File, args: opt = options) : Promise<File> {
 
     this.encodeLog(image, args);
 
     const compress = new Compress(image, args);
 
-    const compressFile : File = await compress.process();
-
-    return compressFile;
+    return await compress.process();
   },
 
 
@@ -98,13 +98,13 @@ const squooshBrowser = {
 
      [...images.files].forEach((image) => {
 
-       squooshBrowser.readImage(image)
+       api.readImage(image)
          .then((res) => {
            // load the original image
-           squooshBrowser.loadOriginal(image);
+           api.loadOriginal(image);
            // process and show the encoded image
            if (typeof res.imageSrc == "string") {
-             squooshBrowser.setImage(res.imageSrc, "encoded")
+             api.setImage(res.imageSrc, "encoded")
              console.log(res);
            }
          })
@@ -114,14 +114,14 @@ const squooshBrowser = {
   async loadOriginal(image: Blob) {
     var originalFile = new FileReader();
     originalFile.onload = function (e) {
-      squooshBrowser.setImage(e.target?.result as string, "original")
+      api.setImage(e.target?.result as string, "original")
     }
     originalFile.readAsDataURL(image);
   },
 
 
   async readImage( image : File ) {
-    const respSquoosh = await squooshBrowser.encoder(image);
+    const respSquoosh = await api.encoder(image);
     const reader = new FileReader()
     await reader.readAsDataURL(respSquoosh)
 
@@ -133,19 +133,57 @@ const squooshBrowser = {
         })
       }
     });
+  },
+
+  encodeFromUrl(url : string, args: opt = options) {
+    console.log(url)
+
+    let data : any = {};
+
+    const res = fetch(url)
+      .then((response) => {
+        console.log("please wait!");
+        return response.blob();
+      }).then((blob) => {
+        data.original = {
+          size: blob.size,
+          type: blob.type
+        }
+        return new File([blob], 'imageBLOB', {type: blob.type});
+      }).then((file) => {
+        const originalFile = new FileReader();
+        originalFile.onload = function (e) {
+          api.setImage(e.target?.result as string, "original")
+        }
+        originalFile.readAsDataURL(file);
+        return new Compress(file, args);
+      }).then((fileCompressed) => {
+        return fileCompressed.process()
+      }).then((image) => {
+        data.compressed = {
+          size: image.size,
+          type: image.type
+        }
+        return  api.readImage(image);
+      }).then(blob => {
+        api.setImage(blob.imageSrc as string, "encoded")
+
+        data.optimized = data.original.size - data.compressed.size;
+        data.optimizedRatio = `saved ${Math.round(100 - ((data.compressed.size / data.original.size) * 100))}% (saved ${Math.round(data.optimized / 1024 )}kb)` ;
+        console.log("compress results", data);
+      })
 
   }
 };
-
 
 
 // input type onChange trigger conversion
 const fileinput : HTMLElement | null = document.getElementById('file')
 
 if (fileinput) fileinput.addEventListener('change',(input:Event) => {
-  const encodedImage = squooshBrowser.changeCallback(input)
+  const encodedImage = api.changeCallback(input)
   console.log(encodedImage)
   }
 )
 
-export default squooshBrowser;
+

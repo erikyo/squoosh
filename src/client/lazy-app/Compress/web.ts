@@ -31,6 +31,7 @@ import { default as browserAVIFDecode} from 'features/decoders/avif/worker/avifD
 import { default as browserJXRDecode} from 'features/decoders/jxl/worker/jxlDecode';
 import { default as browserWEBPDecode} from 'features/decoders/webp/worker/webpDecode';
 import { default as browserWP2Decode} from 'features/decoders/wp2/worker/wp2Decode';
+import { default as browserMOZJPEGDecode } from 'features/decoders/mozjpeg/worker/mozjpegDecode';
 
 import { avifWebEncode } from 'features/encoders/avif/client';
 import { gifWebEncode} from 'features/encoders/browserGIF/client';
@@ -105,6 +106,9 @@ async function decodeImage(
   const canDecode = await canDecodeImageType(mimeType);
   if (!canDecode) {
     switch (mimeType) {
+      // TODO: fix Uncaught (in promise) ReferenceError: process is not defined
+      // case 'image/jpeg':
+      //   return await browserMOZJPEGDecode(blob);
       case 'image/avif':
         return await browserAVIFDecode(blob);
       case 'image/webp':

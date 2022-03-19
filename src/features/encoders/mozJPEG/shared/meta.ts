@@ -24,6 +24,7 @@ export const defaultOptions: EncodeOptions = {
   optimize_coding: true,
   smoothing: 0,
   quant_table: 3,
+  color_space: 2,
   trellis_multipass: false,
   trellis_opt_zero: false,
   trellis_opt_table: false,

@@ -12,7 +12,11 @@ module.exports = {
   entry: './src/index.ts',
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname, '../docs')
+    path: path.resolve(__dirname, '../docs'),
+    library: {
+      name: 'squoosh',
+      type: 'umd'
+    },
   },
   module: {
     rules: [
@@ -47,6 +51,10 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
+    fallback: {
+      "fs": false,
+      "path": false,
+    },
     plugins: [
       new TsconfigPathsPlugin({
         logLevel: 'info',
