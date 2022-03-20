@@ -105,6 +105,7 @@ import * as rotatePreprocessorMeta from 'features/preprocessors/rotate/shared/me
 export interface PreprocessorState {
   rotate: rotatePreprocessorMeta.Options,
 }
+
 export const defaultPreprocessorState: PreprocessorState = {
   rotate: rotatePreprocessorMeta.defaultOptions,
 };
