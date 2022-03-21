@@ -1,4 +1,4 @@
-import { EncoderState, ProcessorState } from '../feature-meta/app';
+import { EncoderState, ProcessorState } from 'client/lazy-app/feature-meta/app';
 import { shallowEqual } from '../util';
 
 interface CacheResult {

@@ -3,15 +3,12 @@ import {defaultPreprocessorState, defaultProcessorState, encoderMap, EncoderStat
 import {workerResizeMethods} from "features/processors/resize/shared/meta";
 
 import "./style.scss";
-import rotate from "features/preprocessors/rotate/worker/rotate";
-import * as rotatePreprocessorMeta from "features/preprocessors/rotate/shared/meta";
-
 
 // https://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript
 function formatBytes(bytes : number, decimals :number = 2) {
   if (bytes === 0) return '0 Bytes';
 
-  const k = 1024;
+  const k = 256;
   const dm = decimals < 0 ? 0 : decimals;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
 
@@ -20,7 +17,8 @@ function formatBytes(bytes : number, decimals :number = 2) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-
+// Squoosh Browser API
+// later will be rearranged, cleaned up, commented etc... now I am in the creative phase :)
 const options : opt = {
   "encoderState": {
     type: 'avif',
@@ -41,12 +39,9 @@ interface ImageData {
   name: string;
 }
 
-// Create Squoosh Browser object into window
-// later will be rearranged, cleaned up, commented etc... now I am in the creative phase :)
 export const api = {
 
-  encodeLog(filesize : File, data : opt | undefined = undefined) {
-    console.log('Squoosh Browser');
+  encodeLog(filesize : File, data : opt ) {
     console.log(new Date() + `Filename: ${filesize.name}  (size ${filesize.size})`);
     // if (data) console.log('data', data);
   },
@@ -72,8 +67,8 @@ export const api = {
   setImage(src : string, target : string) {
     const img = new Image()
     img.src = src
-    const targetElement = document.getElementById(target)
-      targetElement?.appendChild(img)  // reader.result为获取结果
+    const targetElement = document.querySelector(target)
+      targetElement?.replaceWith(img)  // reader.result为获取结果
   },
 
 
@@ -87,24 +82,24 @@ export const api = {
     }
 
      [...images.files].forEach((image) => {
-
+       progress(fileInputLabel, "Load Image")
        api.readImage(image)
          .then((res) => {
            // load the original image
            api.loadOriginal(image);
            // process and show the encoded image
-           if (typeof res.imageSrc == "string") {
-             api.setImage(res.imageSrc, "encoded")
-             console.log(res);
-           }
+           api.setImage(res.imageSrc as string, "#encoded img")
+           progress(fileInputLabel, "Success!")
+           console.log(res);
          })
+
     })
   },
 
   async loadOriginal(image: Blob) {
     var originalFile = new FileReader();
     originalFile.onload = function (e) {
-      api.setImage(e.target?.result as string, "original")
+      api.setImage(e.target?.result as string, "#original img")
     }
     originalFile.readAsDataURL(image);
   },
@@ -144,7 +139,7 @@ export const api = {
       }).then((file) => {
         const originalFile = new FileReader();
         originalFile.onload = function (e) {
-          api.setImage(e.target?.result as string, "original")
+          api.setImage(e.target?.result as string, "#original img")
         }
         originalFile.readAsDataURL(file);
         return new Compress(file, args);
@@ -157,7 +152,7 @@ export const api = {
         }
         return  api.readImage(image);
       }).then(blob => {
-        api.setImage(blob.imageSrc as string, "encoded")
+        api.setImage(blob.imageSrc as string, "#encoded img")
 
         data.optimized = data.original.size - data.compressed.size;
         data.optimizedRatio = `before ${formatBytes(data.original.size)} - after ${formatBytes(data.compressed.size)} - (${Math.round(100 - ((data.compressed.size / data.original.size) * 100))}% Squooshed - saves ${formatBytes(data.optimized / 1024 )})` ;
@@ -167,6 +162,24 @@ export const api = {
   }
 };
 
+// input type onChange trigger conversion
+const fileinput : HTMLElement | null | undefined = document.getElementById('file')
+const fileInputLabel = fileinput?.nextElementSibling;
+
+fileinput?.addEventListener('change',(input:Event) => {
+
+    console.log(input.target)
+    progress(fileInputLabel, "Please Wait")
+
+    api.changeCallback(input)
+
+  }
+)
+
+
+const progress = function (el = fileInputLabel, message = "Choose file") {
+  if (el) el.textContent = message;
+}
 
 
 // Controls
@@ -177,7 +190,6 @@ const selectChangeHandle = ({target}: {target: EventTarget | null | any }) => {
   document.getElementById("controlWrapOptions")?.childNodes[0].replaceWith(
       [
       Object.entries(encoderMap[selectedValue].meta.defaultOptions).map(elem => elem[0] + ": " + elem[1]).join(",\n"),
-        Object.entries(options.encoderState.options).map(elem => elem[0] + ": " + elem[1]).join(",\n"),
         Object.entries(options.preprocessorState.rotate).map(elem => elem[0] + ": " + elem[1]).join(",\n"),
         Object.entries(options.processorState.quantize).map(elem => elem[0] + ": " + elem[1]).join(",\n"),
         Object.entries(options.processorState.resize).map(elem => elem[0] + ": " + elem[1]).join(",\n")
@@ -214,23 +226,23 @@ function buildOptions(type:EncoderType) {
   )
 
   // Rotate : PreProcess image
-  var selectPreProcessRotate = document.createElement("select");
-  selectPreProcessRotate.className = "preprocess";
-  const selectPreProcessRotateLabel = document.createElement("label");
-  selectPreProcessRotateLabel.textContent = "Rotate";
+  var selectProcessRotate = document.createElement("select");
+  selectProcessRotate.id = "preprocess";
+  const selectProcessRotateLabel = document.createElement("label");
+  selectProcessRotateLabel.textContent = "Rotate";
 
   Object.values([0 , 90 , 180 , 270]).forEach((rotation) => {
     var el = document.createElement("option");
     el.textContent = el.value = rotation.toString();
-    selectPreProcessRotate.appendChild(el);
+    selectProcessRotate.appendChild(el);
   })
 
-  document.getElementById("controlWrap")?.append(selectPreProcessRotate);
-  selectPreProcessRotate.before( selectPreProcessRotateLabel);
+  document.getElementById("controlWrap")?.append(selectProcessRotate);
+  selectProcessRotate.before( selectProcessRotateLabel);
 
   // Resize : PreProcess image
   const selectPreProcessResize = document.createElement("select");
-  selectPreProcessResize.className = "preprocessResize";
+  selectPreProcessResize.id = "preprocessResize";
   const selectPreProcessResizeLabel = document.createElement("label");
   selectPreProcessResizeLabel.textContent = "Resize";
 
@@ -245,7 +257,7 @@ function buildOptions(type:EncoderType) {
 
   // Size : PreProcessSize image
   const selectPreProcessSize = document.createElement("select");
-  selectPreProcessSize.className = "preprocessResize";
+  selectPreProcessSize.id = "preProcessSize";
   const selectPreProcessSizeLabel = document.createElement("label");
   selectPreProcessSizeLabel.textContent = "Size";
 
@@ -260,15 +272,4 @@ function buildOptions(type:EncoderType) {
 
 }
 buildOptions("avif");
-
-// input type onChange trigger conversion
-const fileinput : HTMLElement | null = document.getElementById('file')
-
-if (fileinput) fileinput.addEventListener('change',(input:Event) => {
-  const encodedImage = api.changeCallback(input)
-  console.log(encodedImage)
-  console.log(input.target)
-  }
-)
-
 

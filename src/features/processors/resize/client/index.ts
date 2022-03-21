@@ -74,7 +74,7 @@ export async function resize(
     return vectorResize(source.vectorImage, options);
   }
   if (isWorkerOptions(options)) {
-    return workerBridge.resize(source.preprocessed, options);
+    return workerBridge.resize(signal, source.preprocessed, options);
   }
   return browserResize(source.preprocessed, options);
 }
@@ -92,5 +92,3 @@ export async function webResize(
   }
   return browserResize(source.preprocessed, options);
 }
-
-

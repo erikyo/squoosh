@@ -4,8 +4,7 @@
 
 const eslintConfig = {
   globals: {
-    jQuery: true,
-    $: true,
+    squoosh: true,
   },
   rules: {
     "padding-line-between-statements": [

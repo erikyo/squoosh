@@ -1,11 +1,11 @@
-export enum UVMode {
+export const enum UVMode {
   UVModeAdapt , // Mix of 420 and 444 (per block)
   UVMode420, // All blocks 420
   UVMode444, // All blocks 444
   UVModeAuto, // Choose any of the above automatically
 }
 
-export enum Csp {
+export const enum Csp {
   kYCoCg,
   kYCbCr,
   kCustom,

@@ -134,6 +134,7 @@ async function preprocessImage(
 
   if (preprocessorState.rotate.rotate !== 0) {
     processedData = await workerBridge.rotate(
+      signal,
       processedData,
       preprocessorState.rotate,
     );
@@ -156,6 +157,7 @@ async function processImage(
   }
   if (processorState.quantize.enabled) {
     result = await workerBridge.quantize(
+      signal,
       result,
       processorState.quantize,
     );

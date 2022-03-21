@@ -50,7 +50,7 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.json'],
+    extensions: ['.ts', '.tsx', '.js', '.wasm'],
     fallback: {
       "fs": false,
       "path": false,
@@ -58,18 +58,19 @@ module.exports = {
     plugins: [
       new TsconfigPathsPlugin({
         logLevel: 'info',
-        extensions: [".ts",".tsx"]
+        extensions: [".ts",".tsx",".wasm"]
       })
     ],
   },
   plugins: [
-    new webpack.ContextReplacementPlugin(
-      /(.*)~(asset|chunk)-url:(\.*)/,
+    new webpack.NormalModuleReplacementPlugin(
+      /((~asset-|~chunk-)?url|codec):/,
       path.resolve(__dirname, '../')
     ),
     new HtmlWebpackPlugin({
       template: './src/index.html',
-      title: 'Squoosh Browser Demo'
+      title: 'Squoosh Browser Demo',
+      favicon: "./src/favicon.ico"
     }),
     new MiniCssExtractPlugin({
       filename: devMode ? "[name].css" : "[name].[contenthash].css",

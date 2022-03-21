@@ -10,9 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { EncodeOptions } from '../../../../../codecs/wp2/enc/wp2_enc';
+import { EncodeOptions } from '../../../../../codecs/wp2/enc/wp2_enc';
+import type { UVMode, Csp } from '../../../../../codecs/wp2/enc/wp2_enc';
 
-export { EncodeOptions };
+export type { EncodeOptions };
+export { UVMode, Csp };
 
 export const label = 'WebP v2 (unstable)';
 export const mimeType = 'image/webp2';

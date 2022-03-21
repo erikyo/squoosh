@@ -10,7 +10,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import wasmUrl from 'codecs/rotate/rotate.wasm';
 import { Options } from '../shared/meta';
 
 export interface RotateModuleInstance {
@@ -24,7 +23,8 @@ export interface RotateModuleInstance {
 // `instantiateStreaming` probably takes longer to load than the time we save by
 // using `instantiateStreaming` in the first place. So let’s just use
 // `ArrayBuffer`s here.
-const instancePromise = fetch(wasmUrl)
+// https://depth-first.com/articles/2020/06/29/compiling-rust-to-webassembly-a-simple-example/
+const instancePromise = fetch('../../../../../codecs/rotate/rotate.wasm')
   .then((r) => r.arrayBuffer())
   .then((buf) => WebAssembly.instantiate(buf));
 
